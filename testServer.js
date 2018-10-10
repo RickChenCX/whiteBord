@@ -3,6 +3,8 @@ const   websocketServer = require('ws').Server;
 var wss = new websocketServer({port:8081});
 
 var sockets = new Array();
+
+//这个是自定义设置的字段，可根据需求更改
 let backData = {
     "Type":"RESPONSE",
     "Code":200,
@@ -47,7 +49,7 @@ wss.on('connection',function (ws) {
                         ws.send(msg);
                     }
 
-                })
+                });
                 break;
         }
 
