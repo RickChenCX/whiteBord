@@ -1,0 +1,2338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>paperjs demo</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <link rel="stylesheet" href="static/css/wb.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="static/js/paper-full.js"></script>
+    <script src="static/js/pdf/pdf.js" type="text/javascript"></script>
+</head>
+<body>
+<!--onbeforeunload=" closeWs()"-->
+<!--switch-->
+<div class="menu-switch" >
+    <i class="layui-icon layui-icon-shrink-right hide-left"></i>
+</div>
+<div class="layui-form operation">
+    <button class="layui-btn layui-btn-fluid select-bottom" id="open_work">工具</button>
+    <div class="layui select-bottom" >
+        <select name="color" lay-verify="required" lay-filter="color">
+            <option value="">请选择一个颜色</option>
+            <option value="black">black</option>
+            <option value="blue">blue</option>
+            <option value="red">red</option>
+            <option value="green">green</option>
+            <option value="orange">orange</option>
+            <option value="purple">purple</option>
+            <option value="brown">brown</option>
+        </select>
+        <div class="layui-unselect layui-form-select">
+            <div class="layui-select-title">
+                <input type="text" placeholder="请选择一个颜色" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i>
+            </div>
+            <dl class="layui-anim layui-anim-upbit" style="">
+                <dd lay-value="" class="layui-select-tips layui-this">请选择一个颜色</dd>
+                <dd lay-value="black" class="">black</dd>
+                <dd lay-value="blue" class="">blue</dd>
+                <dd lay-value="red" class="">red</dd>
+                <dd lay-value="green" class="">green</dd>
+                <dd lay-value="orange" class="">orange</dd>
+                <dd lay-value="purple" class="">purple</dd>
+                <dd lay-value="brown" class="">brown</dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="layui select-bottom">
+        <select name="lineWidth" lay-verify="required" lay-filter="lineWidth">
+            <option value="">请选择一个数值</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <div class="layui-unselect layui-form-select">
+            <div class="layui-select-title">
+                <input type="text" placeholder="请选择一个数值" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i>
+            </div>
+            <dl class="layui-anim layui-anim-upbit" style="">
+                <dd lay-value="" class="layui-select-tips layui-this">请选择一个数值</dd>
+                <dd lay-value="2" class="">2</dd>
+                <dd lay-value="3" class="">3</dd>
+                <dd lay-value="4" class="">4</dd>
+                <dd lay-value="5" class="">5</dd>
+                <dd lay-value="6" class="">6</dd>
+                <dd lay-value="7" class="">7</dd>
+                <dd lay-value="8" class="">8</dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="layui select-bottom">
+        <select name="fillColor" lay-verify="required" lay-filter="fillColor">
+            <option value="">请选择一个值</option>
+            <option value="无">无</option>
+            <option value="white">white</option>
+            <option value="black">black</option>
+            <option value="blue">blue</option>
+            <option value="red">red</option>
+            <option value="green">green</option>
+            <option value="orange">orange</option>
+            <option value="purple">purple</option>
+            <option value="brown">brown</option>
+            <option value="pink">pink</option>
+
+        </select>
+        <div class="layui-unselect layui-form-select">
+            <div class="layui-select-title">
+                <input type="text" placeholder="请选择一个值" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i>
+            </div>
+            <dl class="layui-anim layui-anim-upbit" style="">
+                <dd lay-value="" class="layui-select-tips layui-this">请选择一个值</dd>
+                <dd lay-value="无" class="">无</dd>
+                <dd lay-value="white" class="">white</dd>
+                <dd lay-value="black" class="">black</dd>
+                <dd lay-value="blue" class="">blue</dd>
+                <dd lay-value="red" class="">red</dd>
+                <dd lay-value="green" class="">green</dd>
+                <dd lay-value="orange" class="">orange</dd>
+                <dd lay-value="purple" class="">purple</dd>
+                <dd lay-value="brown" class="">brown</dd>
+                <dd lay-value="pink" class="">pink</dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-fluid" id="undo">undo</button>
+        <button class="layui-btn layui-btn-fluid" id="redo">redo</button>
+        <button class="layui-btn layui-btn-danger layui-btn-fluid" id="clear">clear</button>
+        <button class="layui-btn layui-btn-fluid layui-btn-normal" id="fullScreen">全屏</button>
+        <button type="button" class="layui-btn-fluid layui-btn" id="test1">
+            <i class="layui-icon">&#xe67c;</i>上传文件
+        </button>
+        <button class="layui-btn layui-btn-fluid layui-btn-normal" id="file_download">文件下载</button>
+        <button class="layui-btn layui-btn-fluid layui-btn-normal" id="file_load">加载pdf</button>
+
+    </div>
+
+</div>
+
+<ul class="icon_list" id="icon_list" style="display: none;">
+    <li>
+        <img id="line" src="images/white_b/line.png" alt="直线" onclick="app.tool1.activate();app.command.setDrawType('line');hide_show('icon_list');return false;" width="30"  height="30"/>
+    </li>
+    <li>
+        <img id="circle" src="images/white_b/圆.png" alt="圆" onclick="app.tool2.activate();app.command.setDrawType('circle');hide_show('icon_list');return false;" width="30"  height="30"/>
+
+    </li>
+    <li>
+        <img id="ellipse" src="images/white_b/椭圆.png" alt="椭圆" onclick="app.tool3.activate();app.command.setDrawType('ellipse');hide_show('icon_list');return false;" width="30"  height="30"/>
+
+    </li>
+    <li>
+        <img id="rectangle" src="images/white_b/矩形.png" alt="矩形" onclick="app.tool4.activate();app.command.setDrawType('rectangle');hide_show('icon_list');return false;" width="30"  height="30"/>
+
+    </li>
+    <li>
+        <!--<button id="triangle">三角形</button>-->
+        <img id="triangle" src="images/white_b/三角形.png" alt="三角形" onclick="app.tool5.activate();app.command.setDrawType('triangle');hide_show('icon_list');return false;" width="30"  height="30"/>
+
+    </li>
+    <li>
+        <!--<button id="star">五角星</button>-->
+        <img id="star" src="images/white_b/五角星.png" alt="五角星" onclick="app.tool6.activate();app.command.setDrawType('star');hide_show('icon_list');return false;" width="30"  height="30"/>
+
+    </li>
+    <li>
+        <!--<button id="laser">激光笔</button>-->
+        <img id="laser" src="images/white_b/激光笔.png" alt="激光笔" onclick="app.tool7.activate();app.command.setDrawType('laser');hide_show('icon_list');return false;"width="15"  height="15"/>
+
+    </li>
+    <li>
+        <!--<button id="curve">自由曲线</button>-->
+        <img id="curve" src="images/white_b/曲线.png" alt="自由曲线" onclick="app.tool8.activate();app.command.setDrawType('curve');hide_show('icon_list');return false;" width="30"  height="30"/>
+
+    </li>
+
+</ul>
+
+<div class="canvas_area" >
+    <div class="" id="canvas_area"></div>
+    <!--<canvas hidpi="off" class="canvasstyle" id="the-canvas"></canvas>-->
+
+    <canvas id="canvas" resize  ></canvas>
+</div>
+
+<!--loading-->
+<div class="loading" id="loading" style="display: none;">
+    <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+    </div>
+</div>
+<!--pdf-->
+<div id="pdfArea" style="display: none">
+    <button class="layui-btn-sm layui-btn-warm" id="prevPage"> < </button>
+    <button class="layui-btn-sm layui-btn-warm" id="nextPage"> > </button>
+    <span>Page: <span id="pageNum" >0</span> / <span id="totalPageNum">0</span></span>
+    <!--<button id="minus" >-</button>-->
+    <!--<button id="addscale" >+</button>-->
+    <button class="layui-btn-sm layui-btn-danger" id="closepdf" >关闭</button>
+</div>
+
+<!--加载文件到canvas-->
+<div id="load_pdf">
+    <div class="layui-form select-bottom">
+        <div class="layui-inline" id="load-content">
+            <select name="load" lay-filter="load" lay-verify="required" id="loadSelect">
+
+            </select>
+            <div class="layui-unselect layui-form-select">
+                <div class="layui-select-title">
+                    <input type="text" placeholder="请选择" value readonly class="layui-input layui-unselect"><i class="layui-edge"></i>
+                </div>
+                <dl class="layui-anim layui-anim-upbit" style="">
+
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<!--文件下载-->
+<div id="downlaod" style="display: none;">
+    <div class="layui-form select-bottom"  id="download_content">
+        <div class="layui-inline" >
+            <select name="download" lay-verify="required" lay-filter="download" id="downloadSelect">
+                <option value="">请选择</option>
+            </select>
+            <div class="layui-unselect layui-form-select">
+                <div class="layui-select-title">
+                    <input type="text" placeholder="请选择" value readonly class="layui-input layui-unselect"><i class="layui-edge"></i>
+                </div>
+                <dl class="layui-anim layui-anim-upbit" style="">
+                    <dd lay-value="" class="layui-select-tips layui-this">请选择</dd>
+
+                </dl>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script src="static/layui/layui.js"></script>
+<script type="text/javascript">
+    // var pdf_url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf',//pdf地址，最好选择上传到服务器生成得地址//cdn.mozilla.net/pdfjs/tracemonkey.pdf
+    var drawHistory = [],
+        pdfAndPaper=[],
+        midArray = [];
+    var paperCanvas = document.getElementById('canvas');
+    var node_file_host = "http://47.95.114.104:3000/";
+
+    function exitFullscreen() {
+        if(document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if(document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if(document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+    function launchIntoFullscreen(element,callback) {
+        if(element.requestFullscreen){
+            element.requestFullscreen();
+        }
+        else if(element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        }
+        else if(element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        }
+        else if(element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+
+        callback();
+    }
+    function hide_show(id){
+        var get_id = document.getElementById(id);
+        if(get_id.style.display == 'none') {
+            get_id.style.display = '';
+        } else {
+            get_id.style.display = 'none';
+        }
+    }
+
+    function download_fnc(a){
+        var get_download_msg = 'http://localhost:3000/download/'+a;
+        axios.get(get_download_msg).then((data) =>{
+            console.log(data.data);
+            //打开新窗口
+            window.open(data.data);
+
+            // var a = document.createElement('a');
+            // 同一个域名下可以这么下载，不同域名还是打开新窗口
+            // a.href = data.data;
+            // a.download = file_name;
+            // a.click();
+            // window.URL.revokeObjectURL(url);
+        }).catch((err)=>{
+            console.log(err);
+        })
+    }
+    function randomString(length = 16) {
+        var str = Math.random().toString(36).substr(2);
+
+        if (str.length >= length) {
+            return str.substr(0, length);
+        }
+        str += randomString(length - str.length);
+        return str;
+    }
+    function setPageNum(number){
+        document.getElementById('pageNum').innerHTML = number;
+    }
+    function setTotalNum(number){
+        document.getElementById('totalPageNum').innerHTML = number;
+
+    }
+
+</script>
+<!--<script type="text/paperscript" canvas="canvas" >-->
+    <script type="text/javascript" >
+        var data,path;
+        var middleArray = new Array();
+        var PDFObj = function () {
+            this.pageNum = 1;
+            this.page_count = 0;
+            this.pdf_url = "";
+            this.nextData = {};
+            this.prev_data = {};
+            this.body_width = document.body.scrollWidth;
+            this.body_height = document.body.scrollHeight;
+            this.viewport = null;
+            this.body_scale = 1;//pdf比例
+            this.box = document.getElementById('canvas_area');
+            this.pageRendering = false;
+            this.pageNumPending = null;
+            this.setPdfUrl = function (url) {
+                this.pdf_url = url;
+            };
+            this.setPageNum = function (num) {
+                this.pageNum = num;
+            };
+            this.setPageCount = function (num) {
+                this.page_count = num;
+            };
+        };
+        PDFObj.prototype = {
+                createPdfContainer:function (id,className) {
+                    var newCanvas = document.createElement('canvas');
+                    newCanvas.id = id;
+                    newCanvas.className = className;
+                    this.box.appendChild(newCanvas);
+                },
+                createCanvas:function (num,temp) {
+                    var id = "";
+                    for (var i=0;i<num;i++){
+                        id = temp + i;
+                        this.createPdfContainer(id,"pdf-class");
+                    }
+                    console.log(this.box.children);
+                    for(var s=0;s<this.box.children.length;s++){
+                        if(s !=0){
+                            this.box.children[s].style.display = "none";
+                        }
+                    }
+                },
+                loadPDF:function () {
+                    var that = this;
+                    document.getElementById("loading").style.display = "";
+                    this.box.innerHTML="";
+                    return new Promise(function(resolve){
+                        PDFJS.getDocument(that.pdf_url).then(function (pdf) {
+                            var id = "";
+                            var idTemp = "pdf-";
+                            var page_Num = pdf.numPages;
+                            that.createCanvas(page_Num,idTemp);
+                            for(var k=0;k<page_Num;k++){
+                                id = idTemp + k;
+                                that.renderPDF(pdf,k+1,id,page_Num);
+                            }
+                            resolve(page_Num);
+                        });
+                    })
+
+                },
+                renderPDF:function (pdf,i,id,totalNum) {
+                    console.log("总的页数:"+totalNum);
+                    var that = this;
+                    pdf.getPage(i).then(function (page) {
+                        that.body_scale = that.body_width / that.body_height;
+                        that.viewport = page.getViewport(that.body_scale);
+
+                        var canvas_ = document.getElementById(id);
+                        console.log(that.viewport);
+
+                        canvas_.height = that.viewport.height;
+                        canvas_.width = that.viewport.width;
+                        // Render PDF page into canvas context
+                        var renderContext = {
+                            canvasContext: canvas_.getContext('2d'),
+                            viewport: that.viewport
+                        };
+                        var renderTask = page.render(renderContext);
+
+                        // Wait for rendering to finish
+                        renderTask.promise.then(function () {
+                            that.pageRendering = false;
+                            if (that.pageNumPending !== null) {
+                                // New page rendering is pending
+                                pdf.getPage(that.pageNumPending);
+                                that.pageNumPending = null;
+                            }
+                        });
+                        //加载完成后的回调，修改paper容器的大小，匹配pdf容器
+                        renderTask._internalRenderTask.callback = function () {
+                            console.log("第"+i+"页加载完成");
+                            if( pdfAndPaper[pageNum - 1]){
+                                pdfAndPaper[pageNum-1].forEach(function(item,i){
+                                    drawPath(item);
+                                })
+                            }
+                            document.getElementById("loading").style.display = "none";
+                        }
+                    })
+                },
+                nextPage:function (num) {
+                    console.log('into nextPage fnc');
+
+                    console.log(this.page_count);
+                    pdfHistory = [];
+                    for(var i =0;i < this.page_count;i++){
+                    console.log(num);
+
+                        if(num == i){
+                            midArray[num-1] = drawHistory;
+                            drawHistory = [];
+                            pdfAndPaper[num-1] = midArray[num-1];
+                        }
+                    }
+
+                    if (num >= this.page_count) {
+                        return;
+                    }
+                    console.log("pdf-"+(num-1));
+
+                    hide_show("pdf-"+(num-1));
+                    num++;
+                    pageNum = num;
+                    this.setPageNum(pageNum);
+                    setPageNum(pageNum);
+                    this.nextData = {
+                        method:'changePage',
+                        pageNum:num,
+                        drawData:pdfAndPaper,
+                    };
+                    hide_show("pdf-"+(num-1));
+                    pdfHistory.push(this.nextData);
+                    console.log(message(this.nextData));
+                    project.clear();
+
+                    if( pdfAndPaper[pageNum-1]){
+
+                        pdfAndPaper[pageNum-1].forEach(function(item,i){
+                            console.log(item);
+                            drawPath(item);
+                        })
+                    }
+                },
+                //上一页
+                prevPage:function (num){
+                    console.log('into prevPage fnc:'+num);
+                    pdfHistory = [];
+                    for(var i =0;i < this.page_count;i++){
+
+                        if(num == i){
+                            midArray[num-1] = drawHistory;
+                            drawHistory = [];
+                            pdfAndPaper[num-1] = midArray[num-1];
+                        }
+                    }
+
+                    if (num <= 1) {
+                        return;
+                    }
+                    console.log("pdf-"+(num-1));
+                    hide_show("pdf-"+(num-1));
+
+                    num--;
+                    pageNum = num;
+                    this.setPageNum(pageNum);
+                    setPageNum(pageNum);
+
+                    this.prev_data = {
+                        method:'changePage',
+                        pageNum:num,
+                        drawData:pdfAndPaper,
+                    };
+                    // console.log(pageNum);
+                    pdfHistory.push(this.prev_data);
+                    hide_show("pdf-"+(num-1));
+                    project.clear();
+                    if(pdfAndPaper[num-1]){
+
+                        pdfAndPaper[num-1].forEach(function(item,i){
+                            console.log(item);
+                            drawPath(item);
+                        })
+                    }
+
+                }
+
+            };
+        var pdf_obj = new PDFObj();
+
+        //画图对象
+        var PaperCanvas = function (){
+            // 现在的玩法可能需要自己存start点的值，在redo或undo可能会有些问题，必定会有问题，这个得想清楚啰
+            var start_x;
+            var start_y;
+            this.color = "black";
+            this.lineWidth = 2;
+            this.fill = "black";
+            // this.drawHistory = [];
+            // this.middleArray = [];
+            this.count = 0;
+            this.redoStack = [];
+            this.undoStack = [];
+            this.drawType = "line";
+            this.drag_datas = {
+                method: 'drag',
+                data: []
+            };
+            this.reciveColor = "";
+            this.reciveFill = "";
+            this.reciveLineWidth = "";
+
+            this.setColor = function (color) {
+                this.color = color;
+            };
+            this.setLineWidth = function (lineWidth) {
+                this.lineWidth = lineWidth;
+            };
+            this.setFill = function (fill) {
+                this.fill = fill;
+            };
+            this.setDrawType = function (drawType) {
+                this.drawType = drawType;
+            };
+        }
+        PaperCanvas.prototype = {
+            endFnc :function(event){
+                console.log('end:'+event.point);
+                if ( this.count) {
+                    data = {
+                        method: 'end',
+                        point1: {
+                            x: event.point.x / view.size.width,
+                            y: event.point.y / view.size.height
+                        }
+                    };
+
+                    var data_copy = deepCopy(this.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    this.undoStack.push(path);
+                    middleArray.push(data);
+                    this.drag_datas.data = [];
+                    batchSignal(middleArray);
+                    middleArray = [];
+                }
+            },
+            drawFnc : function(event){
+                // console.log(this);
+                data = {
+                    method: 'drag',
+                    point1: {
+                        x: event.point.x / view.size.width,
+                        y: event.point.y / view.size.height,
+                    }
+                };
+                this.drag_datas.data.push(data);
+                this.count++;
+                this.redoStack=[];
+            },
+            undo: function () {
+
+                if(!this.undoStack.length) {
+                    return;
+                }
+                console.log("undoStack : ", this.undoStack);
+                // 存path
+                path = this.undoStack.pop();
+                this.undoWhiteBoard(path);
+                data = {
+                    method: 'undo',
+                };
+                batchSignal(data);
+            },
+
+            undoWhiteBoard:function (path) {
+                // drawHistory和pathStack或许只存一个了，应该是了
+                console.log('drawHistory : ',drawHistory);
+
+                // 先不考虑线宽这些乱七八糟的，只看设置了哪个tool，后面可以把这些相关的设置组成一个数组或者对象，当作现在的一条来处理
+                this.redoStack.push(drawHistory.pop());  // end
+                this.redoStack.push(drawHistory.pop());  // drag
+                this.redoStack.push(drawHistory.pop());	// start
+                this.redoStack.push(drawHistory.pop()); // set tool
+
+                console.log('redoStack : ', this.redoStack);
+                path.remove();
+            },
+
+            redo:function () {
+                if (!this.redoStack.length) {
+                    return;
+                }
+
+                this.redoWhiteBoard(this.redoStack.pop()); // set tool
+                this.redoWhiteBoard(this.redoStack.pop()); // start
+                this.redoWhiteBoard(this.redoStack.pop()); // drag
+                this.redoWhiteBoard(this.redoStack.pop()); // end
+
+                data = {
+                    method: 'redo',
+                };
+                batchSignal(data);
+            },
+            //redo_btn.addEventListener('click', redo);
+
+            redoWhiteBoard:function (pathData) {
+                // 画出来的应该在画的时候就推到undoStack去了
+                drawPath(pathData);
+            },
+
+
+            clear:function () {
+                //clearPdfCanvas();
+                clearCanvas();
+                data = {
+                    method: 'clear'
+                };
+                batchSignal(data);
+            }
+
+        }
+        function tool1MouseDown(event){
+            console.log(app.command.drawType);
+            data = {
+                method:"command",
+                command:app.command.drawType,
+                color:app.command.color,
+                lineWidth:app.command.lineWidth,
+                fill:app.command.fill,
+            };
+            drawHistory.push(data);
+            middleArray.push(data);
+            data = {
+                method: 'start',
+                point1: {
+                    x: event.point.x / view.size.width,
+                    y: event.point.y / view.size.height,
+                }
+            };
+            drawHistory.push(data);
+            middleArray.push(data);
+        }
+
+        window.app = {
+            command:new PaperCanvas(),
+            tool1:new Tool({
+                onMouseDown:tool1MouseDown,
+                onMouseDrag:function (event) {
+                  var that = this;
+                  path = new Path.Line({
+                      from: event.downPoint,
+                      to: event.point,
+                      strokeColor: app.command.color,
+                      strokeWidth: app.command.lineWidth
+                  });
+                  app.command.drawFnc(event);
+
+                  that.onMouseUp = function (event){
+                      app.command.endFnc(event);
+                  };
+                  path.removeOnDrag()
+                },
+
+            }),
+            tool2:new Tool({
+                onMouseDown:tool1MouseDown,
+                onMouseDrag:function (event) {
+                    var that = this;
+                    if(app.command.fill){
+                        path = new Path.Circle({
+                            center: event.downPoint,
+                            fillColor: app.command.fill,
+                            radius: (event.point - event.downPoint).length,
+                            strokeColor: app.command.color,
+                            strokeWidth:app.command.lineWidth
+                        });
+                    }else{
+                        path = new Path.Circle({
+                            center: event.downPoint,
+                            //fillColor: fill,
+                            radius: (event.point - event.downPoint).length,
+                            strokeColor: app.command.color,
+                            strokeWidth:app.command.lineWidth
+                        });
+                    }
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+                    app.command.drag_datas.data.push(data);
+
+                    app.command.count++;
+                    app.command.redoStack = [];
+                    that.onMouseUp = function() {
+                        if(app.command.count) {
+                            data = {
+                                method: 'end',
+                                point1: {
+                                    x: event.point.x / view.width,
+                                    y: event.point.y / view.height
+                                }
+                            };
+
+                            var data_copy = deepCopy(app.command.drag_datas);
+
+                            drawHistory.push(data_copy);
+                            drawHistory.push(data);
+                            app.command.undoStack.push(path);
+                            //batchSignal(data);
+
+                            middleArray.push(data);
+                            app.command.drag_datas.data = [];
+                            batchSignal(middleArray);
+                            middleArray = [];
+                        }
+                    };
+
+                    path.removeOnDrag();
+                }
+            }),
+            tool3:new Tool({
+                onMouseDown:tool1MouseDown,
+                onMouseDrag:function (event) {
+                    var that = this;
+
+                    if( app.command.fill){
+                        path = new Path.Ellipse({
+                            center: event.downPoint,
+                            radius: (event.point - event.downPoint).abs(),
+                            strokeColor:  app.command.color,
+                            fillColor:  app.command.fill,
+                            strokeWidth: app.command.lineWidth,
+                        });
+                    }else{
+                        path = new Path.Ellipse({
+                            center: event.downPoint,
+                            radius: (event.point - event.downPoint).abs(),
+                            strokeColor:  app.command.color,
+                            //fillColor: fill,
+                            strokeWidth: app.command.lineWidth,
+                        });
+                    }
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+                    app.command.drag_datas.data.push(data);
+                    //batchSignal(data);
+                    // middleArray.push(data);
+                    app.command.count++;
+                    app.command.redoStack = [];
+                    // 忽略了mouseout,严格的做法应该把它也给加上
+                    that.onMouseUp = function() {
+                        if( app.command.count) {
+                            data = {
+                                method: 'end',
+                                point1: {
+                                    x: event.point.x / view.width,
+                                    y: event.point.y / view.height
+                                }
+                            };
+                            data_copy = deepCopy(app.command.drag_datas);
+
+                            drawHistory.push(data_copy);
+                            drawHistory.push(data);
+                            app.command.undoStack.push(path);
+
+                            middleArray.push(data);
+                            //batchSignal(data);
+
+                            app.command.drag_datas.data = [];
+
+                            batchSignal(middleArray);
+                            middleArray = [];
+                        }
+                    };
+                    path.removeOnDrag();
+                }
+            }),
+            tool4:new Tool({
+                onMouseDown:tool1MouseDown,
+                onMouseDrag:function (event) {
+                    var that = this;
+                    if(app.command.fill){
+                        var path = new Path.Rectangle({
+                            from: event.downPoint,
+                            fillColor: app.command.fill,
+                            to: event.point,
+                            strokeColor: app.command.color,
+                            strokeWidth:app.command.lineWidth,
+                        });
+                    }else{
+                        path = new Path.Rectangle({
+                            from: event.downPoint,
+                            //fillColor: fill,
+                            to: event.point,
+                            strokeColor: app.command.color,
+                            strokeWidth:app.command.lineWidth,
+                        });
+                    }
+
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+                    app.command.drag_datas.data.push(data);
+                    //batchSignal(data);
+                    // middleArray.push(data);
+
+                    app.command.count++;
+                    app.command.redoStack = [];
+
+                    // 忽略了mouseout,严格的做法应该把它也给加上
+                    that.onMouseUp = function() {
+                        if(app.command.count) {
+                            data = {
+                                method: 'end',
+                                point1: {
+                                    x: event.point.x / view.width,
+                                    y: event.point.y / view.height
+                                }
+                            };
+                            data_copy = deepCopy(app.command.drag_datas);
+                            drawHistory.push(data_copy);
+                            drawHistory.push(data);
+                            app.command.undoStack.push(path);
+                            //batchSignal(data);
+                            middleArray.push(data);
+                            app.command.drag_datas.data = [];
+
+                            batchSignal(middleArray);
+                            middleArray = [];
+                        }
+                    };
+                    path.removeOnDrag();
+                }
+            }),
+            tool5:new Tool({
+                onMouseDown:tool1MouseDown,
+                onMouseDrag:function (event) {
+                    var that = this;
+                    var sides = 3;
+                    if(app.command.fill){
+                        path = new Path.RegularPolygon({
+                            center: event.downPoint,
+                            sides: sides,
+                            radius: (event.point - event.downPoint).length,
+                            strokeColor: app.command.color,
+                            fillColor: app.command.fill,
+                            strokeWidth:app.command.lineWidth,
+                        });
+                    }else{
+                        path = new Path.RegularPolygon({
+                            center: event.downPoint,
+                            sides: sides,
+                            radius: (event.point - event.downPoint).length,
+                            strokeColor: app.command.color,
+                            //fillColor: 'yellow',
+                            strokeWidth:app.command.lineWidth,
+                        });
+                    }
+
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+                    app.command.drag_datas.data.push(data);
+                    //batchSignal(data);
+                    // middleArray.push(data);
+                    app.command.count++;
+                    app.command.redoStack = [];
+
+                    // 忽略了mouseout,严格的做法应该把它也给加上
+                    that.onMouseUp = function() {
+                        if(app.command.count) {
+                            data = {
+                                method: 'end',
+                                point1: {
+                                    x: event.point.x / view.width,
+                                    y: event.point.y / view.height
+                                }
+                            };
+
+                            var data_copy = deepCopy(app.command.drag_datas);
+
+                            drawHistory.push(data_copy);
+                            drawHistory.push(data);
+                            app.command.undoStack.push(path);
+                            //batchSignal(data);
+                            middleArray.push(data);
+                            app.command.drag_datas.data = [];
+
+                            batchSignal(middleArray);
+                            middleArray = [];
+                        }
+                    };
+
+                    path.removeOnDrag();
+                }
+            }),
+            tool6:new Tool({
+                onMouseDown:tool1MouseDown,
+                onMouseDrag:function (event) {
+                    var that = this ;
+                    var points = 5;
+                    if(app.command.fill){
+                        path = new Path.Star({
+                            center: event.downPoint,
+                            points: points,
+                            radius1: (event.point - event.downPoint).length / 3,
+                            radius2: (event.point - event.downPoint).length,
+                            strokeColor: app.command.color,
+                            fillColor: app.command.fill,
+                            strokeWidth:app.command.lineWidth,
+                        });
+                    }else{
+                        path = new Path.Star({
+                            center: event.downPoint,
+                            points: points,
+                            radius1: (event.point - event.downPoint).length / 3,
+                            radius2: (event.point - event.downPoint).length,
+                            strokeColor: app.command.color,
+                            //fillColor: 'golden',
+                            strokeWidth:app.command.lineWidth,
+                        });
+                    }
+
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+                    app.command.drag_datas.data.push(data);
+                    //batchSignal(data);
+                    // middleArray.push(data);
+
+                    app.command.count++;
+                    app.command.redoStack = [];
+
+                    // 忽略了mouseout,严格的做法应该把它也给加上
+                    that.onMouseUp = function() {
+                        if(app.command.count) {
+                            data = {
+                                method: 'end',
+                                point1: {
+                                    x: event.point.x / view.width,
+                                    y: event.point.y / view.height
+                                }
+                            };
+
+                            data_copy = deepCopy(app.command.drag_datas);
+
+                            drawHistory.push(data_copy);
+                            drawHistory.push(data);
+                            app.command.undoStack.push(path);
+                            //batchSignal(data);
+                            middleArray.push(data);
+                            app.command.drag_datas.data = [];
+
+                            batchSignal(middleArray);
+                            middleArray = [];
+                        }
+                    };
+
+                    path.removeOnDrag();
+                }
+            }),
+            tool7:new Tool({
+                onMouseMove:function (event) {
+                    path = new Path.Circle({
+                        center: event.point,
+                        fillColor: 'red',
+                        radius: 4,
+                        strokeColor: app.command.color,
+                        strokeWidth:app.command.lineWidth,
+                    });
+
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+                    //batchSignal(data);
+                    middleArray.push(data);
+                    //console.log(middleArray);
+                    //这里感觉是有问题的。。。
+                    if(middleArray.length !=0 && middleArray.length > 20){
+                        batchSignal(middleArray);
+                        middleArray = [];
+                    }
+                    path.removeOnMove();
+                }
+            }),
+            tool8:new Tool({
+                onMouseDown:function(event) {
+                    data = {
+                        method: 'command',
+                        command: 'curve',
+                        color: app.command.color,
+                        lineWidth: app.command.lineWidth
+                    };
+                    drawHistory.push(data);
+                    middleArray.push(data);
+                    path = new Path();
+                    path.strokeColor =  app.command.color;
+                    path.strokeWidth =  app.command.lineWidth;
+
+                    path.moveTo(event.point);
+                    data = {
+                        method: 'start',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+
+                    app.command.undoStack.push(path);
+                    drawHistory.push(data);
+                    //batchSignal(data);
+                    middleArray.push(data);
+                },
+                onMouseDrag:function(event){
+                    var that = this;
+                    data = {
+                        method: 'drag',
+                        point1: {
+                            x: event.point.x / view.width,
+                            y: event.point.y / view.height,
+                        }
+                    };
+
+                    path =  app.command.undoStack.pop();
+                    path.add(event.point.x, event.point.y);
+                    app.command.undoStack.push(path);
+                    //batchSignal(data);
+                    middleArray.push(data);
+                    app.command.count++;
+                    app.command.redoStack = [];
+                    app.command.drag_datas.data.push(data);
+
+                    // 忽略了mouseout,严格的做法应该把它也给加上
+                    that.onMouseUp = function() {
+                        if( app.command.count) {
+                            data = {
+                                method: 'end',
+                                point1: {
+                                    x: event.point.x / view.width,
+                                    y: event.point.y / view.height
+                                }
+                            };
+
+                            path =  app.command.undoStack.pop();
+                            path.add(event.point.x, event.point.y);
+                            app.command.undoStack.push(path);
+
+                            var data_copy = deepCopy( app.command.drag_datas);
+
+                            drawHistory.push(data_copy);
+                            drawHistory.push(data);
+
+                            //batchSignal(data);
+                            middleArray.push(data);
+                            app.command.drag_datas.data = [];
+
+                            batchSignal(middleArray);
+                            middleArray = [];
+                        }
+
+                    };
+                }
+            })
+        }
+
+        // 为方便与移动端对接加的... 为了跟移动端行为一致，做了很多不必要的或者不利落的动作
+        var client = {},
+          // count = 0, //Grabs the total count of each continuous stroke
+          // undoStack = [], //Stores the value of start and count for each continuous stroke
+          // redoStack = [], //When undo pops, data is sent to redoStack
+          // drawHistoryReceivedFrom,
+          // drawHistoryReceived,
+          batchUpdates = [],
+          resizeTimeout;
+        var line_previous;
+        var laser_previous;
+        var circle_previous;
+        var ellipse_previous;
+        var rectangle_previous;
+        var regularPolygon_previous;
+        var star_previous;
+        var pdfHistory = [];
+        var box = document.getElementById('canvas_area');
+
+        //layui code
+        layui.use(['upload','layer'],function () {
+            var upload = layui.upload;
+            var layer = layui.layer;
+            var uploadInst = upload.render({
+                elem:'#test1',
+                url:'http://localhost:3000/upload_file',
+                accept:'file',
+                done:function (res) {
+                    console.log(res);
+                    if(res.statusCode == 200){
+                        layer.open({
+                            type:1,
+                            content:'上传成功',
+                            title:'Message'
+                        })
+                    }else{
+                        layer.open({
+                            type:1,
+                            content:'上传失败',
+                            title:'Message'
+                        })
+                    }
+                },
+                error:function (err) {
+                    //请求异常回调
+                    console.log(err);
+                }
+            })
+        })
+        layui.use(['element','layer','form'],function(){
+            var form = layui.form;
+            var element = layui.element;
+            var $ = layui.jquery;
+            var sendData;
+            var layer = layui.layer;
+            var fileName;
+            var fileFullName;
+
+            //收缩侧边栏
+            var left_nav_status = true;
+            $('.menu-switch').click(function () {
+                 //alert(123);
+                if(left_nav_status){
+                    $('.operation').animate({left:"-170px"});
+                    $(this).animate({left:"-15px"});
+                    $(this).html('<i class="layui-icon layui-icon-spread-left"></i>\n');
+                    left_nav_status = !left_nav_status;
+
+                }else {
+                    $('.operation').animate({left:"0px"});
+                    $(this).animate({left:"155px"});
+                    $(this).html('<i class="layui-icon layui-icon-shrink-right hide-left"></i>\n');
+
+                    left_nav_status = !left_nav_status;
+                }
+            });
+
+            //监听下拉框事件
+            form.on('select(color)',function(data){
+                console.log(data);
+                app.command.color = data.value;
+                // sendData = {
+                //     'method':'changeColor',
+                //     'color':app.command.color
+                // };
+                // ws.send(JSON.stringify(message(sendData)));
+            });
+            form.on('select(lineWidth)',function(data1){
+                console.log(data1);
+                app.command.lineWidth = data1.value;
+                // sendData = {
+					// method: 'command',
+					// //command: 'line',
+                //     color:app.command.color,
+                //     fill:app.command.fill,
+                //     lineWidth:app.command.lineWidth
+                // };
+                // ws.send(JSON.stringify(message(data1)));
+            });
+            form.on('select(fillColor)',function(data){
+                data.value  == "无"?app.command.fill = '' : app.command.fill = data.value;
+
+            });
+            form.on('select(download)',function(data){
+                console.log(data.value);
+                fileName = data.value;
+                //return fileName;
+            });
+            form.on('select(load)',function(data){
+                console.log(data.value);
+                fileFullName = data.value;
+                //return fileName;
+            });
+
+            //button按钮事件
+            $('#file_load').click(function(){
+                $('#loadSelect').empty();
+
+                $.get('http://localhost:3000/query_file',function (data) {
+                    console.log(data);
+                    var op = "<option value=''>请选择</option>\n";
+                    var dd = "<dd lay-value='' class='layui-select-tips layui-this'>请选择</dd>";
+                    $('#load-content ').find('select').append(op);
+                    $('#load-content ').find('dl').append(dd);
+                    data.forEach(function(item,i){
+                        if(item.split('.')[1] == 'pdf'){
+                            var option_el = document.createElement('option');
+                            option_el.setAttribute('value',item);
+                            option_el.innerHTML = item;
+                            var dd_el = document.createElement('dd');
+                            dd_el.setAttribute('lay-value',item);
+                            dd_el.setAttribute('class','');
+
+                            dd_el.innerHTML = item;
+                            $('#load-content ').find('select').append(option_el);
+                            $('#load-content ').find('dl').append(dd_el);
+                            //console.log(dd_el);
+                        }
+
+
+                    });
+
+
+                    form.render();
+                });
+
+                layer.open({
+                    type:1,
+                    btn:['加载到白板'],
+                    content:$('#load_pdf').html(),
+                    btnAlign:'c',
+                    btn1:function(index,layero){
+                        if(fileFullName){
+                            hide_show('loading');
+                            //hide_show('pdfArea');
+                            $('#pdfArea').show();
+                            var selected = fileFullName;
+                            var pdf_url = node_file_host + 'static/finish_upload/'+selected;
+
+                            pdf_obj.setPdfUrl(pdf_url);
+                            pdf_obj.loadPDF().then(function(data){
+                                console.log(data);
+                                pdf_obj.setPageCount(data);
+                                $("#totalPageNum").html(data);
+
+                            });
+
+                            $("#pageNum").html(pdf_obj.pageNum);
+                            //$("#totalPageNum").html(pdf_obj.page_count);
+
+                            //console.log("change:"+view.viewSize.height);pageNum
+                            var data = {
+                                method:'loadPdf',
+                                pdf_url:pdf_url
+                            };
+                            pdfHistory.push(data);
+                            ws.send(JSON.stringify(message(data)));
+                        }else{
+
+                            alert('请选择文件！');
+                        }
+
+                    }
+                })
+
+            });
+            $('#prevPage').click(function () {
+                var num = pdf_obj.pageNum;
+
+                pdf_obj.prevPage(num);
+                ws.send(JSON.stringify(message(pdf_obj.prev_data)));
+
+            })
+            $('#nextPage').click(function () {
+                var num = pdf_obj.pageNum;
+                pdf_obj.nextPage(num);
+                ws.send(JSON.stringify(message(pdf_obj.nextData)));
+
+            })
+            $('#open_work').click(function(){
+                hide_show('icon_list');
+            });
+            $('#undo').click(function () {
+               app.command.undo()
+            });
+            $('#redo').click(function () {
+                app.command.redo();
+            });
+            $('#clear').click(function () {
+                app.command.clear();
+            });
+            $('#fullScreen').click(function(){
+                var fullScreenData = {
+                    method:"fullScreen",
+                };
+                showFull();
+                ws.send(JSON.stringify(message(fullScreenData)));
+            });
+            $('#closepdf').click(function(){
+                $('#canvas_area').empty();
+                $('#pdfArea').hide();
+                var data = {
+                    method:'closePdf'
+                };
+                ws.send(JSON.stringify(message(data)));
+            });
+            $('#file_download').click(function(){
+                $('#downloadSelect').empty();
+                $.get('http://localhost:3000/query_file',function (data) {
+                    //console.log(data);
+                    var op = "<option value=''>请选择</option>\n";
+                    var dd = "<dd lay-value='' class='layui-select-tips layui-this'>请选择</dd>";
+                    $('#download_content ').find('select').append(op);
+                    $('#download_content ').find('dl').append(dd);
+                    data.forEach(function(item,i){
+                        var option_el = document.createElement('option');
+                        option_el.setAttribute('value',item);
+                        option_el.innerHTML = item;
+                        var dd_el = document.createElement('dd');
+                        dd_el.setAttribute('lay-value',item);
+                        dd_el.setAttribute('class','');
+
+                        dd_el.innerHTML = item;
+                        $('#download_content ').find('select').append(option_el);
+                        $('#download_content ').find('dl').append(dd_el);
+                        //console.log(dd_el);
+
+                    });
+
+
+                    form.render();
+
+                });
+                layer.open({
+                    type:1,
+                    title:'下载文件',
+                    btn:['下载'],
+                    //area:'50%',
+                    btnAlign: 'c',
+                    content:$('#downlaod').html(),
+                    btn1:function(index, layero){
+                        //console.log(index);
+                        //console.log(layero)
+                        if(fileName){
+                            console.log(fileName);
+                            download_fnc(fileName);
+
+                        }else{
+                            alert('请选择下载文件！')
+                        }
+                    }
+                })
+            })
+        });
+
+        //test数据
+        var test_user = randomString(16) + '@rtc.test.com';
+        // var ws_url = 'wss://www.dts.dnion.com:8443/rtc?userid=rtc.test.com' + randomString(16);
+        var ws_url = 'ws://localhost:8081';
+        //var  ws_url = 'ws://101.200.241.232:8080/rtc?userid=' + test_user;
+        var ws = new WebSocket(ws_url);
+        var Cseq = 0;
+        var refreshSubscribe;
+
+        //paperjs 监听size变化
+        view.onResize = function(event){
+            view.width = event.size.width;
+            view.height = event.size.height;
+            //path.position = view.center;
+            var copyHistory = drawHistory;
+            clearCanvas();
+            console.log(copyHistory);
+            copyHistory.forEach(function(item,i){
+                 drawPath(item);
+            });
+            console.log(view.width,view.height);
+        };
+        function showFull(){
+            console.log("open window's fullScreen");
+            var full=document.body;
+            //drawHistory = [];
+            launchIntoFullscreen(full,function(){
+                console.log(window.screen.height ,window.screen.width );
+
+            });
+
+        }
+        function delFull() {
+            console.log("end window's fullScreen");
+
+            exitFullscreen();
+        }
+        //esc推出全屏事件处理
+        document.addEventListener("fullscreenchange", function(e) {
+            console.log("fullscreenchange", e);
+            console.log("全屏状态", e.currentTarget.webkitIsFullScreen);
+            checkFullScreenChange(e.currentTarget.webkitIsFullScreen);
+
+        });
+        document.addEventListener("mozfullscreenchange", function(e) {
+            console.log("mozfullscreenchange ", e);
+            console.log("全屏状态", e.currentTarget.webkitIsFullScreen);
+            checkFullScreenChange(e.currentTarget.webkitIsFullScreen);
+
+        });
+        document.addEventListener("webkitfullscreenchange", function(e) {
+            console.log("webkitfullscreenchange", e);
+            console.log("全屏状态", e.currentTarget.webkitIsFullScreen);
+            checkFullScreenChange(e.currentTarget.webkitIsFullScreen);
+
+        });
+        document.addEventListener("msfullscreenchange", function(e) {
+            console.log("msfullscreenchange", e);
+            console.log("全屏状态", e.currentTarget.webkitIsFullScreen);
+            checkFullScreenChange(e.currentTarget.webkitIsFullScreen);
+        });
+        function checkFullScreenChange(type){
+            console.log(drawHistory);
+
+            var exitFullScreenMsg = {
+                method:'exitFullScreen',
+            };
+            if(!type){
+                ws.send(JSON.stringify(message(exitFullScreenMsg)));
+            }else{
+                return;
+            }
+        }
+        //聊天室subscribe信令
+        function subScribe(ex){
+            return {
+                "Type":"SUBSCRIBE",
+                "Request-URI":"room:888@rtc.test.com",
+                "From":test_user,
+                "To":"room:888@rtc.test.com",
+                "DialogueID":randomString(16),
+                "CSeq":Cseq++,
+                "Expire":ex,
+                "P-Asserted-Identity":test_user,
+                "Event":"Message-push"
+            };
+        }
+      //   聊天室 message信令
+        function message(data){
+            return {
+                "Type":"MESSAGE",
+                "Request-URI":"room:888@rtc.test.com",
+                "From":test_user,
+                "To":"room:888@rtc.test.com",
+                "DialogueID":randomString(16),
+                "CSeq":Cseq++,
+                "P-Asserted-Identity":test_user,
+                "Content-Type":"text",
+                "Body":data
+            }
+        }
+        function closeWs(){
+          refreshSubscribe = clearInterval();
+          ws.send(JSON.stringify(subScribe(0)))
+        }
+        function Subscribe(){
+          console.log(JSON.stringify(subScribe(300)));
+          ws.send(JSON.stringify(subScribe(300)));
+        }
+        ws.onopen = function (e) {
+          console.log('connection to server');
+        };
+
+        ws.addEventListener('open',function (){
+                Subscribe();
+                //发送请求历史数据
+                req_pdf_history();
+                requestHistory();
+
+                //开始定时器
+                refreshSubscribe = setInterval(Subscribe,150000);
+                ws.addEventListener('message',function (e) {
+                    console.log(JSON.parse(e.data));
+                    var ev = JSON.parse(e.data);
+                    if(ev.Code == 200 && ev.Cseq == 1){
+                        //console.log(this);
+                    }else if(ev.Body){
+                        if(ev.Body.title == 'message'){
+                            //处理聊天室信息
+                            //console.log(ev.Body)
+                        }else  {
+                            try{
+                                ev.Body.forEach(function (i,item) {
+                                    drawPath(i);
+                                })
+                            }catch(e){
+                                console.log(e);
+                                drawPath(ev.Body);
+                            }
+                        }
+
+                    }else {
+                        console.log("这个是什么鬼："+ev);
+                    }
+                })
+
+            });
+        //即将要断开websocket连接
+        if(ws.readyState === 2){
+          closeWs();
+        }
+        ws.onclose = function (e) {
+          ws.close();
+          refreshSubscribe = clearInterval();
+        };
+        ws.onerror = function(e){
+          console.error(e);
+          ws.close();
+          refreshSubscribe = clearInterval();
+        }
+        function req_pdf_history(){
+            var data = {
+                "method":"request_pdf_history"
+            }
+            ws.send(JSON.stringify(message(data)));
+        }
+        //pdf放大缩小方法,先注释，后面有要求在弄
+        // function minus() {//缩小
+        //     if (scale <= minscale) {
+        //         return
+        //     }
+        //     scale -= 0.1;
+        //     queueRenderPage(pageNum);
+        // }
+        // function addscale() {//放大
+        //     if (scale >= maxscale) {
+        //         return
+        //     }
+        //     scale += 0.1;
+        //     queueRenderPage(pageNum);
+        // }
+        // document.getElementById('nextPage').addEventListener('click',function(){
+        //     console.log('next page');
+        //     nextPage(pageNum);
+        //     ws.send(JSON.stringify(message(nextData)));
+        //
+        //
+        // }) ;
+        // document.getElementById('prevPage').addEventListener('click',function(){
+        //     console.log('prev page');
+        //     prevPage(pageNum);
+        //     ws.send(JSON.stringify(message(prev_data)));
+        //
+        //
+        // }) ;
+        //document.getElementById('minus').onclick = minus;
+        //document.getElementById('addscale').onclick = addscale;
+        // 对象深拷贝
+        function deepCopy(p, c) {
+            var c = c || {};
+            for (var i in p) {
+                if (typeof p[i] === 'object') {
+                    c[i] = (p[i].constructor === Array) ? [] : {};
+                    deepCopy(p[i], c[i]);
+                    } else {
+                        c[i] = p[i];
+                    }
+                }
+            return c;
+        }
+        function drawBGC() {
+            var from = new Point(0, 0);
+            var to = new Point(view.width, view.height);
+            var shape = new Shape.Rectangle(from, to);
+            // 可取值的格式有限
+            // shape.strokeColor = 'gray';
+            // shape.fillColor = 'gray';
+        }
+
+        //处理websocket接受的数据
+        var recive_color,
+            recive_fill,
+            recive_lineWidth;
+        function drawPath(data) {
+            console.log('data : ', data);
+            switch(data.method) {
+                case 'command':
+                    console.log('data.command : ' + data.command);
+                    recive_color = data.color;
+                    console.log(recive_color);
+                    recive_fill = data.fill;
+                    recive_lineWidth = data.lineWidth;
+                    which_command(data);
+                    break;
+                case 'start':
+                    console.log('start - point1 : ' + data.point1);
+                    start_which_tool(data);
+                    break;
+                // case 'SetLineColor':
+                // 	console.log('SetLineColor : ' + data.color);
+                // 	break;
+                case 'drag':
+                    console.log('drag - point1' + data.point1);
+                    drag_which_tool(data);
+                    break;
+                case 'end':
+                    console.log('end - point1' + data.point1);
+                    end_which_tool(data);
+                    break;
+                case 'undo':
+                    console.log('undo');
+                    app.command.undoWhiteBoard(app.command.undoStack.pop());
+                    break;
+                case 'redo':
+                    console.log('redo');
+                    app.command.redoWhiteBoard(app.command.redoStack.pop()); // set tool
+                    app.command.redoWhiteBoard(app.command.redoStack.pop()); // start
+                    app.command.redoWhiteBoard(app.command.redoStack.pop()); // drag
+                    app.command.redoWhiteBoard(app.command.redoStack.pop()); // end
+                    break;
+                case 'clear':
+                    console.log('clear');
+                    clearCanvas();
+
+                    break;
+                case 'request_history':
+                    console.log('request_history');
+                    if (drawHistory.length > 0) {
+                        batchSignal({
+                            method: 'history',
+                            drawHistory : drawHistory, // data
+                            // undostack可以不用传主要是缺redo
+                            // undoStack : undoStack,	// path
+                            redoStack : app.command.redoStack	// data
+                        });
+                    }
+                    break;
+                case 'history':
+                    console.log('history');
+                    drawUpdates(data.drawHistory);
+                    redoStack = data.redoStack;
+                    break;
+                case 'changeColor':
+                    break;
+                case 'loadPdf':
+                    console.log('loadpdf');
+                    pdf_url = data.pdf_url;
+                    //loadPDF(pdf_url);
+                    pdf_obj.setPdfUrl(pdf_url);
+                    pdf_obj.loadPDF().then(function(data){
+                        console.log(data);
+                        pdf_obj.setPageCount(data);
+                        document.getElementById('totalPageNum').innerHTML = data;
+                        //$("#totalPageNum").html(data);
+                        document.getElementById('pageNum').innerHTML = pdf_obj.pageNum;
+
+                    });
+                    hide_show('pdfArea');
+
+                    break;
+                case 'closePdf':
+                    //showAndHide();$('#canvas_area').empty();
+                    document.getElementById('canvas_area').innerHTML = '';
+                    document.getElementById('pdfArea').style.display = 'none';
+
+                    break;
+                case 'changePage':
+                    console.log("传进来的新页码："+data.pageNum);
+
+                    console.log("旧页码是："+pdf_obj.pageNum);
+                    if(data.pageNum > pdf_obj.pageNum){
+                        pdf_obj.nextPage((data.pageNum-1));
+                    }else{
+                        pdf_obj.prevPage((pageNum));
+                    }
+                    break;
+                case 'request_pdf_history':
+                    console.log(pdfHistory);
+                    if(pdfHistory.length > 0 ){
+                            batchSignal(pdfHistory[pdfHistory.length - 1]);
+                    }
+                    break;
+                case 'fullScreen':
+                    showFull();
+                    break;
+                case 'exitFullScreen':
+                    delFull();
+                    break;
+                default:
+                    console.log('something from server , but don\'t know what method! ', data);
+                    break;
+            }
+        }
+
+        function which_command(data) {
+            switch(data.command) {
+                case 'line':
+                    activeTool = 'line';
+                    drawHistory.push(data);
+                    console.log('set activeTool : line');
+                    break;
+                case 'circle':
+                    activeTool = 'circle';
+                    drawHistory.push(data);
+                    console.log('set activeTool : circle');
+                    break;
+                case 'ellipse':
+                    activeTool = 'ellipse';
+                    drawHistory.push(data);
+                    console.log('set activeTool : ellipse');
+                    break;
+                case 'rectangle':
+                    activeTool = 'rectangle';
+                    drawHistory.push(data);
+                    console.log('set activeTool : rectangle');
+                    break;
+                case 'triangle':
+                    activeTool = 'triangle';
+                    drawHistory.push(data);
+                    console.log('set activeTool : triangle');
+                    break;
+                case 'star':
+                    activeTool = 'star';
+                    drawHistory.push(data);
+                    console.log('set activeTool : star');
+                    break;
+                case 'laser':
+                    activeTool = 'laser';
+                    console.log('set activeTool : laser');
+                    break;
+                case 'curve':
+                    activeTool = 'curve';
+                    drawHistory.push(data);
+                    console.log('set activeTool : curve');
+                    break;
+                default:
+                    console.log('set activeTool maybe wrong !');
+                    break;
+            }
+        }
+
+        // 现在的玩法可能需要自己存start点的值，在redo或undo可能会有些问题，必定会有问题，这个得想清楚啰
+        var start_x;
+        var start_y;
+        function start_which_tool(data) {
+            switch(activeTool) {
+                case 'line':
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+
+                    drawHistory.push(data);
+                    console.log('start_which_tool : line');
+                    break;
+                case 'circle':
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+
+                    drawHistory.push(data);
+                    console.log('start_which_tool : circle');
+                    break;
+                case 'ellipse':
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+
+                    drawHistory.push(data);
+                    console.log('start_which_tool : ellipse');
+                    break;
+                case 'rectangle':
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+
+                    drawHistory.push(data);
+                    console.log('start_which_tool : rectangle');
+                    break;
+                case 'triangle':
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+
+                    drawHistory.push(data);
+                    console.log('start_which_tool : triangle');
+                    break;
+                case 'star':
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+                    drawHistory.push(data);
+                    console.log('start_which_tool : star');
+                    break;
+                case 'eraser':
+                    console.log('start_which_tool : eraser');
+
+                    // 橡皮擦这个功能怕是后面得改动，现在的玩法不能跟移动端对接
+                    var path = new Path();
+                    // 可以算是paperjs的一个bug？
+                    path.strokeColor = 'black';
+                    // 决定了这是个橡皮擦
+                    path.blendMode = 'destination-out';
+                    path.strokeWidth = 20;
+                    path.moveTo(new Point(data.fromX, data.fromY));
+
+                    drawHistory.push(data);
+                    undoStack.push(path);
+                    break;
+                case 'laser':
+                    // 不会出现
+                    console.log('start_which_tool : laser');
+                    break;
+                case 'curve':
+                    var path = new Path();
+                    path.strokeColor = recive_color;
+                    path.strokeWidth = recive_lineW;
+                    path.moveTo(new Point(data.point1.x * view.width, data.point1.y * view.height));
+
+                    drawHistory.push(data);
+                    undoStack.push(path);
+
+                    start_x = data.point1.x * view.width;
+                    start_y = data.point1.y * view.height;
+
+                    console.log('start_which_tool : curve');
+                    break;
+                default:
+                    console.log('default');
+                    break;
+            }
+        }
+
+        function drag_which_tool(data) {
+            switch(activeTool) {
+                case 'line':
+                    console.log('drag_which_tool : line');
+                    if(line_previous) {
+                        line_previous.remove();
+                    }
+
+                    if(data.data) {
+                        // 如果是数组那就是本地redo或者历史更新，不用管,但是要存下来
+                        data.data.forEach(function(drag_data){
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        line_previous = new Path.Line({
+                            from: new Point(start_x, start_y),
+                            to: new Point(data.point1.x * view.width, data.point1.y * view.height),
+                            strokeColor:recive_color,
+                            strokeWidth:recive_lineWidth
+                        });
+                        console.log(recive_color);
+                        console.log("start_x : ", start_x);
+                        console.log("start_y : ", start_y);
+                        console.log("point1.x : ", data.point1.x);
+                        console.log("point1.y : ", data.point1.y);
+                        console.log("view.width : ", view.width);
+                        console.log("view.height : ", view.height);
+                    }
+                    break;
+                case 'circle':
+                    console.log('drag_which_tool : circle');
+
+                    if(circle_previous) {
+                        circle_previous.remove();
+                    }
+
+                    if(data.data) {
+                        // 如果是数组那就是本地redo或者历史更新，不用管,但是要存下来
+                        data.data.forEach(function(drag_data){
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        console.log(app.command.fill);
+                        if(recive_fill){
+                            circle_previous = new Path.Circle({
+                                center: new Point(start_x, start_y),
+                                fillColor: recive_fill,
+                                radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                                strokeColor: recive_color,
+                                strokeWidth:recive_lineWidth
+                            });
+                        }else{
+                            circle_previous = new Path.Circle({
+                                center: new Point(start_x, start_y),
+                                //fillColor: recive_fill,
+                                radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                                strokeColor: recive_color,
+                                strokeWidth:recive_lineWidth
+                            });
+                        }
+                    }
+                    break;
+                case 'ellipse':
+                    console.log('drag_which_tool : ellipse');
+
+                    if(ellipse_previous) {
+                        ellipse_previous.remove();
+                    }
+                    if(data.data) {
+                        // 如果是数组那就是本地redo或者历史更新，不用管,但是要存下来
+                        data.data.forEach(function(drag_data){
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        ellipse_previous = new Path.Ellipse({
+                            center: new Point(start_x, start_y),
+                            radius: new Size(Math.abs(data.point1.x * view.width - start_x), Math.abs(data.point1.y * view.height - start_y)),
+                            strokeColor: recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+                    break;
+                case 'rectangle':
+                    console.log('drag_which_tool : rectangle');
+
+                    if(rectangle_previous) {
+                        rectangle_previous.remove();
+                    }
+
+                    if(data.data) {
+                        // 如果是数组那就是本地redo或者历史更新，不用管,但是要存下来
+                        data.data.forEach(function(drag_data){
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        rectangle_previous = new Path.Rectangle({
+                            from: new Point(start_x, start_y),
+                            to: new Point(data.point1.x * view.width, data.point1.y * view.height),
+                            strokeColor: recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+                    break;
+                case 'triangle':
+                    console.log('drag_which_tool : triangle');
+
+                    if(regularPolygon_previous) {
+                        regularPolygon_previous.remove();
+                    }
+
+                    if(data.data) {
+                        // 如果是数组那就是本地redo或者历史更新，不用管,但是要存下来
+                        data.data.forEach(function(drag_data){
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        regularPolygon_previous = new Path.RegularPolygon({
+                            center: new Point(start_x, start_y),
+                            sides: 3, // 后面可变的
+                            radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor: recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+                    break;
+                case 'star':
+                    console.log('drag_which_tool : star');
+                    if(star_previous) {
+                        star_previous.remove();
+                    }
+                    if(data.data) {
+                        // 如果是数组那就是本地redo或者历史更新，不用管,但是要存下来
+                        data.data.forEach(function(drag_data){
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        star_previous = new Path.Star({
+                            center: new Point(start_x, start_y),
+                            points: 5, // 后期可改动
+                            radius1: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length / 3,
+                            radius2: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor:recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+                    break;
+                case 'eraser':
+                    console.log('drag_which_tool : eraser');
+                    pathStack.forEach(function(path) {
+                        if(path.uuid === update.uuid) {
+                            path.add(update.toX, update.toY);
+                            // p.view.draw();
+                        }
+                    });
+                    drawHistory.push(update);
+                    break;
+                case 'laser':
+                    console.log('drag_which_tool : laser');
+                    if(laser_previous) {
+                        laser_previous.remove();
+                    }
+                    laser_previous = new Path.Circle({
+                        center: new Point(data.point1.x * view.width, data.point1.y * view.height),
+                        fillColor: 'red',
+                        radius: 4,
+                        strokeColor: recive_color,
+                        strokeWidth:recive_lineWidth
+                    });
+                    break;
+                case 'curve':
+                    console.log('drag_which_tool : curve');
+
+                    var path = app.command.undoStack.pop();
+
+                    if(data.data) {
+                        data.data.forEach(function(drag_data){
+                            path.add(drag_data.point1.x * view.width, drag_data.point1.y * view.height);
+                            app.command.drag_datas.data.push(drag_data);
+                        });
+                    }
+                    else {
+                        path.add(data.point1.x * view.width, data.point1.y * view.height);
+                        app.command.drag_datas.data.push(data);
+                    }
+
+                    app.command.undoStack.push(path);
+                    break;
+                default:
+                    console.log('drag_unknow operation...');
+                    break;
+            }
+        }
+
+        function end_which_tool(data) {
+            switch(activeTool) {
+                case 'line':
+                    console.log('end_which_tool : line');
+
+                    if(line_previous) {
+                        line_previous.remove();
+                    }
+
+                    path = new Path.Line({
+                        from: new Point(start_x, start_y),
+                        to: new Point(data.point1.x * view.width, data.point1.y * view.height),
+                        strokeColor: recive_color,
+                        strokeWidth:recive_lineWidth
+                    });
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.undoStack.push(path);
+                    app.command.drag_datas.data = [];
+                    break;
+                case 'circle':
+                    console.log('end_which_tool : circle');
+
+                    if(circle_previous) {
+                        circle_previous.remove();
+                    }
+                    console.log(recive_fill);
+                    if(recive_fill){
+                        path = new Path.Circle({
+                            center: new Point(start_x, start_y),
+                            fillColor: recive_fill,
+                            radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor: recive_color,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }else{
+                       path = new Path.Circle({
+                            center: new Point(start_x, start_y),
+                            //fillColor: recive_fill,
+                            radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor: recive_color,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.undoStack.push(path);
+                    app.command.drag_datas.data = [];
+                    break;
+                case 'ellipse':
+                    console.log('end_which_tool : ellipse');
+
+                    if(ellipse_previous) {
+                        ellipse_previous.remove();
+                    }
+                    if(recive_fill){
+                        path = new Path.Ellipse({
+                            center: new Point(start_x, start_y),
+                            radius: new Size(Math.abs(data.point1.x * view.width - start_x), Math.abs(data.point1.y * view.height - start_y)),
+                            strokeColor:recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }else{
+                        path = new Path.Ellipse({
+                            center: new Point(start_x, start_y),
+                            radius: new Size(Math.abs(data.point1.x * view.width - start_x), Math.abs(data.point1.y * view.height - start_y)),
+                            strokeColor: recive_color,
+                            //fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.undoStack.push(path);
+                    app.command.drag_datas.data = [];
+                    break;
+                case 'rectangle':
+                    console.log('end_which_tool : rectangle');
+
+                    if(rectangle_previous) {
+                        rectangle_previous.remove();
+                    }
+                    if(recive_fill){
+                       path = new Path.Rectangle({
+                            from: new Point(start_x, start_y),
+                            to: new Point(data.point1.x * view.width, data.point1.y * view.height),
+                            strokeColor: recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }else{
+                        path = new Path.Rectangle({
+                            from: new Point(start_x, start_y),
+                            to: new Point(data.point1.x * view.width, data.point1.y * view.height),
+                            strokeColor: recive_color,
+                            //fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.undoStack.push(path);
+                    app.command.drag_datas.data = [];
+                    break;
+                case 'triangle':
+                    console.log('end_which_tool : triangle');
+
+                    if(regularPolygon_previous) {
+                        regularPolygon_previous.remove();
+                    }
+                    if(recive_fill){
+                        path = new Path.RegularPolygon({
+                            center: new Point(start_x, start_y),
+                            sides: 3, // 后面可变的
+                            radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor: recive_color,
+                            fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }else{
+                        path = new Path.RegularPolygon({
+                            center: new Point(start_x, start_y),
+                            sides: 3, // 后面可变的
+                            radius: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor: recive_color,
+                            //fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.undoStack.push(path);
+                    app.command.drag_datas.data = [];
+                    break;
+                case 'star':
+                    console.log('end_which_tool : star');
+
+                    if(star_previous) {
+                        star_previous.remove();
+                    }
+                    if(recive_fill){
+                        path = new Path.Star({
+                            center: new Point(start_x, start_y),
+                            points: 5, // 后期可改动
+                            radius1: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length / 3,
+                            radius2: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor:recive_color,
+                            fillColor:recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }else{
+                        path = new Path.Star({
+                            center: new Point(start_x, start_y),
+                            points: 5, // 后期可改动
+                            radius1: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length / 3,
+                            radius2: (new Point(data.point1.x * view.width, data.point1.y * view.height) - new Point(start_x, start_y)).length,
+                            strokeColor: recive_color,
+                            //fillColor: recive_fill,
+                            strokeWidth:recive_lineWidth
+                        });
+                    }
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.undoStack.push(path);
+                    app.command.drag_datas.data = [];
+                    break;
+                case 'eraser':
+                    console.log('end_which_tool : eraser');
+
+                    pathStack.forEach(function(path) {
+                        if (path.uuid === update.uuid) {
+                            undoStack.push(path.uuid);
+                            // path.simplify();
+                            // p.view.draw();
+                        }
+                    });
+                    break;
+                case 'laser':
+                    // 不会出现
+                    console.log('end_which_tool : laser');
+                    break;
+                case 'curve':
+                    console.log('end_which_tool : curve');
+
+                    var path = app.command.undoStack.pop();
+                    path.add(data.point1.x * view.width, data.point1.y * view.height);
+                    app.command.undoStack.push(path);
+
+                    var data_copy = deepCopy(app.command.drag_datas);
+
+                    drawHistory.push(data_copy);
+                    drawHistory.push(data);
+                    app.command.drag_datas.data = [];
+                    break;
+                default:
+                    console.log('end_which_tool operation...');
+                    break;
+            }
+        }
+
+        function clearCanvas() {
+            drawBGC();
+            drawHistory = [];
+            undoStack = [];
+            redoStack = [];
+            pdfHistory=[];
+            count = 0;
+            project.clear();
+        };
+
+        function clearPdfCanvas(){
+            var c=document.getElementById("the-canvas");
+            var cxt=c.getContext("2d");
+            cxt.clearRect(0,0,c.width,c.height);
+        }
+        function drawUpdates(updates) {
+            updates.forEach(function(update){
+                drawPath(update);
+            });
+        }
+        function batchSignal(data) {
+            // We send data in small chunks so that they fit in a signal
+            // Each packet is maximum ~250 chars, we can fit 8192/250 ~= 32 updates per signal
+            // 先不考虑它的这些优化，这些可以后面做的
+             <!--var dataCopy = data.slice();-->
+            <!--console.log(dataCopy);-->
+             <!--while (dataCopy.length) {-->
+                 <!--var dataChunk = dataCopy.splice(0, Math.min(dataCopy.length, 32));-->
+                    <!--console.log(dataChunk);-->
+                 <!--ws.send(JSON.stringify(message(dataChunk)) );-->
+             <!--}-->
+            console.log(data);
+            // setTimeout(function(){
+                //console.log(new Date().getTime());
+                ws.send(JSON.stringify(message(data)));
+
+            // },20)
+            // ws.send(JSON.stringify(data) + ' ');
+        }
+
+        function requestHistory() {
+            var data = {
+                method: 'request_history'
+            };
+            ws.send(JSON.stringify(message(data)));
+        }
+        document.addEventListener('keyup', function(event) {
+            if(event.ctrlKey) {
+                if(event.keyCode === 90) {
+                    undo();
+                }
+                if(event.keyCode === 89) {
+                    redo();
+                }
+            }
+        });
+
+        /*
+         *    The Nuts
+         *    During the process of drawing, we collect coordinates on every [mouse|touch]move event.
+         *    These events occur as fast as the browser can create them, and is computer/browser dependent
+         *
+         */
+
+	</script>
+
+</body>
+
+
+</html>
