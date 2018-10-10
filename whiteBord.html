@@ -11,8 +11,6 @@
     <script src="static/js/pdf/pdf.js" type="text/javascript"></script>
 </head>
 <body>
-<!--onbeforeunload=" closeWs()"-->
-<!--switch-->
 <div class="menu-switch" >
     <i class="layui-icon layui-icon-shrink-right hide-left"></i>
 </div>
@@ -42,7 +40,6 @@
                 <dd lay-value="orange" class="">orange</dd>
                 <dd lay-value="purple" class="">purple</dd>
                 <dd lay-value="brown" class="">brown</dd>
-
             </dl>
         </div>
     </div>
@@ -304,8 +301,8 @@
     }
 
 </script>
-<!--<script type="text/paperscript" canvas="canvas" >-->
-    <script type="text/javascript" >
+<script type="text/paperscript" canvas="canvas" >
+    <!--<script type="text/javascript" >-->
         var data,path;
         var middleArray = new Array();
         var PDFObj = function () {
@@ -501,7 +498,6 @@
 
         //画图对象
         var PaperCanvas = function (){
-            // 现在的玩法可能需要自己存start点的值，在redo或undo可能会有些问题，必定会有问题，这个得想清楚啰
             var start_x;
             var start_y;
             this.color = "black";
@@ -764,8 +760,6 @@
                         }
                     };
                     app.command.drag_datas.data.push(data);
-                    //batchSignal(data);
-                    // middleArray.push(data);
                     app.command.count++;
                     app.command.redoStack = [];
                     // 忽略了mouseout,严格的做法应该把它也给加上
@@ -826,9 +820,6 @@
                         }
                     };
                     app.command.drag_datas.data.push(data);
-                    //batchSignal(data);
-                    // middleArray.push(data);
-
                     app.command.count++;
                     app.command.redoStack = [];
 
@@ -1009,7 +1000,6 @@
                             y: event.point.y / view.height,
                         }
                     };
-                    //batchSignal(data);
                     middleArray.push(data);
                     //console.log(middleArray);
                     //这里感觉是有问题的。。。
@@ -1045,7 +1035,6 @@
 
                     app.command.undoStack.push(path);
                     drawHistory.push(data);
-                    //batchSignal(data);
                     middleArray.push(data);
                 },
                 onMouseDrag:function(event){
@@ -1061,13 +1050,11 @@
                     path =  app.command.undoStack.pop();
                     path.add(event.point.x, event.point.y);
                     app.command.undoStack.push(path);
-                    //batchSignal(data);
                     middleArray.push(data);
                     app.command.count++;
                     app.command.redoStack = [];
                     app.command.drag_datas.data.push(data);
 
-                    // 忽略了mouseout,严格的做法应该把它也给加上
                     that.onMouseUp = function() {
                         if( app.command.count) {
                             data = {
@@ -1100,15 +1087,6 @@
             })
         }
 
-        // 为方便与移动端对接加的... 为了跟移动端行为一致，做了很多不必要的或者不利落的动作
-        var client = {},
-          // count = 0, //Grabs the total count of each continuous stroke
-          // undoStack = [], //Stores the value of start and count for each continuous stroke
-          // redoStack = [], //When undo pops, data is sent to redoStack
-          // drawHistoryReceivedFrom,
-          // drawHistoryReceived,
-          batchUpdates = [],
-          resizeTimeout;
         var line_previous;
         var laser_previous;
         var circle_previous;
@@ -1117,8 +1095,6 @@
         var regularPolygon_previous;
         var star_previous;
         var pdfHistory = [];
-        var box = document.getElementById('canvas_area');
-
         //layui code
         layui.use(['upload','layer'],function () {
             var upload = layui.upload;
@@ -1181,23 +1157,10 @@
             form.on('select(color)',function(data){
                 console.log(data);
                 app.command.color = data.value;
-                // sendData = {
-                //     'method':'changeColor',
-                //     'color':app.command.color
-                // };
-                // ws.send(JSON.stringify(message(sendData)));
             });
             form.on('select(lineWidth)',function(data1){
                 console.log(data1);
                 app.command.lineWidth = data1.value;
-                // sendData = {
-					// method: 'command',
-					// //command: 'line',
-                //     color:app.command.color,
-                //     fill:app.command.fill,
-                //     lineWidth:app.command.lineWidth
-                // };
-                // ws.send(JSON.stringify(message(data1)));
             });
             form.on('select(fillColor)',function(data){
                 data.value  == "无"?app.command.fill = '' : app.command.fill = data.value;
@@ -1206,12 +1169,10 @@
             form.on('select(download)',function(data){
                 console.log(data.value);
                 fileName = data.value;
-                //return fileName;
             });
             form.on('select(load)',function(data){
                 console.log(data.value);
                 fileFullName = data.value;
-                //return fileName;
             });
 
             //button按钮事件
@@ -1236,13 +1197,8 @@
                             dd_el.innerHTML = item;
                             $('#load-content ').find('select').append(option_el);
                             $('#load-content ').find('dl').append(dd_el);
-                            //console.log(dd_el);
                         }
-
-
                     });
-
-
                     form.render();
                 });
 
@@ -1254,7 +1210,6 @@
                     btn1:function(index,layero){
                         if(fileFullName){
                             hide_show('loading');
-                            //hide_show('pdfArea');
                             $('#pdfArea').show();
                             var selected = fileFullName;
                             var pdf_url = node_file_host + 'static/finish_upload/'+selected;
@@ -1268,9 +1223,7 @@
                             });
 
                             $("#pageNum").html(pdf_obj.pageNum);
-                            //$("#totalPageNum").html(pdf_obj.page_count);
 
-                            //console.log("change:"+view.viewSize.height);pageNum
                             var data = {
                                 method:'loadPdf',
                                 pdf_url:pdf_url
@@ -1281,7 +1234,6 @@
 
                             alert('请选择文件！');
                         }
-
                     }
                 })
 
@@ -1348,8 +1300,6 @@
                         //console.log(dd_el);
 
                     });
-
-
                     form.render();
 
                 });
@@ -1377,9 +1327,7 @@
 
         //test数据
         var test_user = randomString(16) + '@rtc.test.com';
-        // var ws_url = 'wss://www.dts.dnion.com:8443/rtc?userid=rtc.test.com' + randomString(16);
         var ws_url = 'ws://localhost:8081';
-        //var  ws_url = 'ws://101.200.241.232:8080/rtc?userid=' + test_user;
         var ws = new WebSocket(ws_url);
         var Cseq = 0;
         var refreshSubscribe;
@@ -1388,7 +1336,6 @@
         view.onResize = function(event){
             view.width = event.size.width;
             view.height = event.size.height;
-            //path.position = view.center;
             var copyHistory = drawHistory;
             clearCanvas();
             console.log(copyHistory);
@@ -1405,7 +1352,6 @@
                 console.log(window.screen.height ,window.screen.width );
 
             });
-
         }
         function delFull() {
             console.log("end window's fullScreen");
@@ -1541,7 +1487,7 @@
             }
             ws.send(JSON.stringify(message(data)));
         }
-        //pdf放大缩小方法,先注释，后面有要求在弄
+        //pdf放大缩小方法,先注释
         // function minus() {//缩小
         //     if (scale <= minscale) {
         //         return
@@ -1589,9 +1535,7 @@
             var from = new Point(0, 0);
             var to = new Point(view.width, view.height);
             var shape = new Shape.Rectangle(from, to);
-            // 可取值的格式有限
-            // shape.strokeColor = 'gray';
-            // shape.fillColor = 'gray';
+
         }
 
         //处理websocket接受的数据
@@ -1613,9 +1557,6 @@
                     console.log('start - point1 : ' + data.point1);
                     start_which_tool(data);
                     break;
-                // case 'SetLineColor':
-                // 	console.log('SetLineColor : ' + data.color);
-                // 	break;
                 case 'drag':
                     console.log('drag - point1' + data.point1);
                     drag_which_tool(data);
@@ -1662,13 +1603,11 @@
                 case 'loadPdf':
                     console.log('loadpdf');
                     pdf_url = data.pdf_url;
-                    //loadPDF(pdf_url);
                     pdf_obj.setPdfUrl(pdf_url);
                     pdf_obj.loadPDF().then(function(data){
                         console.log(data);
                         pdf_obj.setPageCount(data);
                         document.getElementById('totalPageNum').innerHTML = data;
-                        //$("#totalPageNum").html(data);
                         document.getElementById('pageNum').innerHTML = pdf_obj.pageNum;
 
                     });
@@ -1676,7 +1615,6 @@
 
                     break;
                 case 'closePdf':
-                    //showAndHide();$('#canvas_area').empty();
                     document.getElementById('canvas_area').innerHTML = '';
                     document.getElementById('pdfArea').style.display = 'none';
 
@@ -2291,19 +2229,12 @@
             // Each packet is maximum ~250 chars, we can fit 8192/250 ~= 32 updates per signal
             // 先不考虑它的这些优化，这些可以后面做的
              <!--var dataCopy = data.slice();-->
-            <!--console.log(dataCopy);-->
              <!--while (dataCopy.length) {-->
                  <!--var dataChunk = dataCopy.splice(0, Math.min(dataCopy.length, 32));-->
                     <!--console.log(dataChunk);-->
                  <!--ws.send(JSON.stringify(message(dataChunk)) );-->
              <!--}-->
-            console.log(data);
-            // setTimeout(function(){
-                //console.log(new Date().getTime());
-                ws.send(JSON.stringify(message(data)));
-
-            // },20)
-            // ws.send(JSON.stringify(data) + ' ');
+            ws.send(JSON.stringify(message(data)));
         }
 
         function requestHistory() {
@@ -2322,14 +2253,6 @@
                 }
             }
         });
-
-        /*
-         *    The Nuts
-         *    During the process of drawing, we collect coordinates on every [mouse|touch]move event.
-         *    These events occur as fast as the browser can create them, and is computer/browser dependent
-         *
-         */
-
 	</script>
 
 </body>
